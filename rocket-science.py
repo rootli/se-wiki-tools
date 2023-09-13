@@ -1,102 +1,114 @@
-# path to SE dir is first argument
+# SE Verzeichnispfad
 # C:\Program Files (x86)\Steam\steamapps\common\SpaceEngineers\
-debugmode=False
+debugmodus=False 
 
 from bs4 import BeautifulSoup
 from pathlib import Path
 import re
 
-table_header=["blockname","type_id","subtype_id","grid_size","armor_type","description","build_time_secs","pcu_pc","pcu_console","airtightness","recipe_SteelPlate","recipe_MetalGrid","recipe_Construction","recipe_LargeTube","recipe_Thrust","recipe_Motor","recipe_Reactor","recipe_BulletproofGlass","recipe_Computer","recipe_Detector","recipe_Display","recipe_Explosives","recipe_Girder","recipe_GravityGenerator","recipe_InteriorPlate","recipe_SmallTube","recipe_Medical","recipe_SolarCell","recipe_Superconductor","mountpoint_Front","mountpoint_Back","mountpoint_Left","mountpoint_Right","mountpoint_Bottom","mountpoint_Top","DLC","standalone"]
-string_list = {}
+table_header=["blockname","type_id","subtype_id","grid_size","armor_type","description","build_time_secs","pcu_pc","pcu_console","airtightness",
+              "recipe_SteelPlate","recipe_MetalGrid","recipe_Construction","recipe_LargeTube","recipe_Thrust","recipe_Motor","recipe_Reactor","recipe_BulletproofGlass","recipe_Computer","recipe_Detector","recipe_Display","recipe_Explosives","recipe_Girder","recipe_GravityGenerator","recipe_InteriorPlate","recipe_SmallTube","recipe_Medical","recipe_SolarCell","recipe_Superconductor","recipe_RadioCommunication","recipe_ZoneChip","recipe_PowerCell","recipe_EngineerPlushie","recipe_SabiroidPlushie",
+              "recipe_SteelPlate_optional","recipe_MetalGrid_optional","recipe_Construction_optional","recipe_LargeTube_optional","recipe_Thrust_optional","recipe_Motor_optional","recipe_Reactor_optional","recipe_BulletproofGlass_optional","recipe_Computer_optional","recipe_Detector_optional","recipe_Display_optional","recipe_Explosives_optional","recipe_Girder_optional","recipe_GravityGenerator_optional","recipe_InteriorPlate_optional","recipe_SmallTube_optional","recipe_Medical_optional","recipe_SolarCell_optional","recipe_Superconductor_optional","recipe_RadioCommunication_optional","recipe_ZoneChip_optional","recipe_PowerCell_optional",
+              "mountpoint_Front","mountpoint_Back","mountpoint_Left","mountpoint_Right","mountpoint_Bottom","mountpoint_Top","DLC","standalone"]
+uebersetzungen = {}
 
-spreadsheet_path="SE_Block_Info.csv"
-sepath=Path("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SpaceEngineers\\")
-blockinfo_path=Path(sepath.joinpath("Content\\Data\\CubeBlocks"))
-descriptions_path=Path(sepath.joinpath("Content\\Data\\Localization\\MyTexts.resx"))
+#Ausgabedatei
+tabellenpfad="SE_Block_Info.csv"
+#Eingabe
+sepfad=Path("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SpaceEngineers\\")
+blockinfopfad=Path(sepfad.joinpath("Content\\Data\\CubeBlocks"))
+uebersetzungenpfad=Path(sepfad.joinpath("Content\\Data\\Localization\\MyTexts.resx"))
 
 def debugprint(s):
-    if(debugmode):
+    '''Alternatives print'''
+    if(debugmodus):
         print(s)
 
-#make a proper table
-def appendListToSpreadsheet(partialblocklist):
-    with open(spreadsheet_path, "a") as spreadsheet:
+# Ausgabedatei speichern
+def ErgebnistabelleSpeichern(blockinfo):
+    with open(tabellenpfad, "w") as tabelle:
+        # Kopfzeile schreiben
         for h in table_header:
-            spreadsheet.write(h+"\t")
-        spreadsheet.write("\n")
-        
-        for block in partialblocklist:
+            tabelle.write(h+"\t")
+        tabelle.write("\n")
+        # Zeilen schreiben
+        for block in blockinfo:
             for h in table_header:      
-                spreadsheet.write(block[h]+"\t")
+                tabelle.write(block[h]+"\t")
                 debugprint(block[h])
-            spreadsheet.write("\n")
+            tabelle.write("\n")
 
-#look up localised strings
+# Blocknamenuebersetzung nachschlagen (localisation)
 def lookup(name):
-    if(string_list.get(name)):
-       return string_list[name]
+    if(uebersetzungen.get(name)):
+       return uebersetzungen[name] # gefunden
     else:
-        return "SAY WHAT?"
+        return "(UNUSED) "+name # kaputt
 
-#parse localisation
-print("Scanning "+str(descriptions_path)+"...")
-fileContent = open(descriptions_path, 'rb').read().decode(encoding='utf-8')
+# Uebersetzung vorbereiten (localisation)
+print("Scanning localizations in "+str(uebersetzungenpfad)+"...")
+fileContent = open(uebersetzungenpfad, 'rb').read().decode(encoding='utf-8')
 resx = BeautifulSoup(fileContent, "lxml-xml")
 for data in resx.find_all('data'):
-    string_list[data['name']]=re.sub('\n', '', data.value.text)
-print(string_list)
+    uebersetzungen[data['name']]=re.sub('\n', '', data.value.text)
+debugprint(uebersetzungen)
 
-#loop over sbc block info
-pathlist = blockinfo_path.glob('**/*.sbc')
-block_list = []
-for filepath in pathlist:
-    print("Scanning "+str(filepath)+"...")
+# Schleife ueber alle Blockdateien
+blockdateienpfade = blockinfopfad.glob('**/*.sbc')
+blockliste = []
+for blockdateipfad in blockdateienpfade:
+    print("Scanning block files in "+str(blockdateipfad)+"...")
     
-    # ignore namespaces from sbc content
-    namespaces_to_delete_list = ['xsi:type=".+?"']
-    fileContentWithNamespaces = open(filepath, 'rb').read().decode(encoding='utf-8')
-    filecontentWithoutNamespaces = re.sub("".join( namespaces_to_delete_list), "", fileContentWithNamespaces)
+    # Namespaces in SBC XML loswerden
+    diese_namespaces_loeschen = ['xsi:type=".+?"']
+    DateienInhaltMitNamespaces = open(blockdateipfad, 'rb').read().decode(encoding='utf-8')
+    DateienInhaltOhneNamespaces = re.sub("".join( diese_namespaces_loeschen), "", DateienInhaltMitNamespaces)
     
-    # parse sbc content
-    sbc = BeautifulSoup(filecontentWithoutNamespaces, "lxml-xml")
+    # SBC-Inhalt ohne Namespaces parsen
+    sbc = BeautifulSoup(DateienInhaltOhneNamespaces, "lxml-xml")
     for block in sbc.find_all('Definition'):
         debugprint("  Found a definition with "+str(len(block))+" elements.")
-
-        d = { 
-            'blockname': lookup(block.DisplayName.text) if block.DisplayName else "Unknown",
-            'type_id': block.Id.TypeId.text if block.Id.TypeId else "Unknown",
-            'subtype_id': block.Id.SubtypeId.text if block.Id.SubtypeId else "Unknown",
-            'grid_size': block.CubeSize.text if block.CubeSize else "Unknown",
-            'armor_type': block.EdgeType.text if block.EdgeType else "N/A",
-            'description': lookup(block.Description.text) if block.Description else "Unknown",
-            'build_time_secs': block.BuildTimeSeconds.text if block.BuildTimeSeconds else "N/A",
-            'pcu_pc': block.PCU.text if block.PCU else "N/A",
-            'pcu_console': block.PCUConsole.text if block.PCUConsole else "N/A",
-            'airtightness': block.IsAirTight.text if block.IsAirTight else "Unknown",
-            'DLC': block.DLC.text if block.DLC else "Vanilla",
-            'standalone': block.IsStandAlone.text if block.IsStandAlone else "true"
+        #Blockdaten auslesen
+        blockDict = { 
+            'blockname':       lookup(block.DisplayName.text) if block.DisplayName      else "Unknown",
+            'type_id':         block.Id.TypeId.text           if block.Id.TypeId        else "Unknown",
+            'subtype_id':      block.Id.SubtypeId.text        if block.Id.SubtypeId     else "Unknown",
+            'grid_size':       block.CubeSize.text            if block.CubeSize         else "Unknown",
+            'armor_type':      block.EdgeType.text            if block.EdgeType         else "N/A",
+            'description':     lookup(block.Description.text) if block.Description      else "Unknown",
+            'build_time_secs': block.BuildTimeSeconds.text    if block.BuildTimeSeconds else "N/A",
+            'pcu_pc':          block.PCU.text                 if block.PCU              else "N/A",
+            'pcu_console':     block.PCUConsole.text          if block.PCUConsole       else "N/A",
+            'airtightness':    block.IsAirTight.text          if block.IsAirTight       else "Unknown",
+            'DLC':             block.DLC.text                 if block.DLC              else "Vanilla",
+            'standalone':      block.IsStandAlone.text        if block.IsStandAlone     else "true"
         }
 
+        # Rest der Reihe mit Nullen fuellen weil nicht alle XML Element Pflicht sind
         for h in table_header:
-            if(not d.get(h)): d[h]=""
+            if(not blockDict.get(h)): blockDict[h]="0"
 
-       # generate keys to store component list
+       # Komponenenliste hat requirede und optionale Komponenten
+       # TODO was wenn es mehr als zwei Duplikate enthaelt, z.B. shelf?
         for c in block.find_all("Component"):
-            debugprint("    found recipe entry "+c['Subtype'] + " "+ c['Count'])
-            d['recipe_'+c['Subtype']]=c['Count']
+            debugprint("    Found recipe entry "+c['Subtype'] + " "+ c['Count'])
+            if( int(blockDict['recipe_'+c['Subtype']]) > 0):
+                # Hab schon requireden Wert, also optional component
+                blockDict['recipe_'+c['Subtype']+"_optional"]=c['Count']
+            else:
+                # Erste Erwaehnung, also required Component
+                blockDict['recipe_'+c['Subtype']]=c['Count']
         
-        # generate keys to store mountpoint list
-        # TODO can have several m.p.s on same Side, currently not counting them yet
+        # Mountpointliste hat mehrere Eintrage pro Seite
+        # TODO: Zur Zeit notiere ich nur, ob es mountpoints hat aber nicht wie viele
         for m in block.find_all("MountPoint"):
             debugprint("    mountpoint "+m['Side'])
-            d['mountpoint_'+m['Side']]="available"
+            blockDict['mountpoint_'+m['Side']]="available"
 
-
-        # append this block's info to the result for this file
-        block_list.append(d)
-    # List for one file has been gathered
-    print("Recorded "+str(len(block_list))+" blocks from file "+str(filepath)+".")
-    debugprint(block_list)
-appendListToSpreadsheet(block_list)
-
-
+        # Ergebnis fuer diesen Block hinzufuegen
+        blockliste.append(blockDict)
+    # An diesem Punkt wurde 1 Datei ausgelesen, naechste Schleife
+    print("Recorded "+str(len(blockliste))+" blocks from file "+str(blockdateipfad)+".")
+    debugprint(blockliste)
+#Ende der Schleife, speichern
+ErgebnistabelleSpeichern(blockliste)
