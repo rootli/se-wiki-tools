@@ -7,6 +7,7 @@ from pathlib import Path
 import re
 
 table_header=["blockname","type_id","subtype_id","grid_size","armor_type","description","build_time_secs","pcu_pc","pcu_console","airtightness",
+              "RequiredPowerInput","PowerInputIdle","MaxRangeMeters","MaxBroadcastPowerDrainkW","MaxPowerOutput","OperationalPowerConsumption","StandbyPowerConsumption","MaxPowerConsumption","MinPowerConsumption",
               "recipe_SteelPlate","recipe_MetalGrid","recipe_Construction","recipe_LargeTube","recipe_Thrust","recipe_Motor","recipe_Reactor","recipe_BulletproofGlass","recipe_Computer","recipe_Detector","recipe_Display","recipe_Explosives","recipe_Girder","recipe_GravityGenerator","recipe_InteriorPlate","recipe_SmallTube","recipe_Medical","recipe_SolarCell","recipe_Superconductor","recipe_RadioCommunication","recipe_ZoneChip","recipe_PowerCell","recipe_EngineerPlushie","recipe_SabiroidPlushie",
               "recipe_SteelPlate_optional","recipe_MetalGrid_optional","recipe_Construction_optional","recipe_LargeTube_optional","recipe_Thrust_optional","recipe_Motor_optional","recipe_Reactor_optional","recipe_BulletproofGlass_optional","recipe_Computer_optional","recipe_Detector_optional","recipe_Display_optional","recipe_Explosives_optional","recipe_Girder_optional","recipe_GravityGenerator_optional","recipe_InteriorPlate_optional","recipe_SmallTube_optional","recipe_Medical_optional","recipe_SolarCell_optional","recipe_Superconductor_optional","recipe_RadioCommunication_optional","recipe_ZoneChip_optional","recipe_PowerCell_optional",
               "mountpoint_Front","mountpoint_Back","mountpoint_Left","mountpoint_Right","mountpoint_Bottom","mountpoint_Top","DLC","standalone"]
@@ -62,7 +63,7 @@ for blockdateipfad in blockdateienpfade:
     # Namespaces in SBC XML loswerden
     diese_namespaces_loeschen = ['xsi:type=".+?"']
     DateienInhaltMitNamespaces = open(blockdateipfad, 'rb').read().decode(encoding='utf-8')
-    DateienInhaltOhneNamespaces = re.sub("".join( diese_namespaces_loeschen), "", DateienInhaltMitNamespaces)
+    DateienInhaltOhneNamespaces = re.sub("".join(diese_namespaces_loeschen), "", DateienInhaltMitNamespaces)
     
     # SBC-Inhalt ohne Namespaces parsen
     sbc = BeautifulSoup(DateienInhaltOhneNamespaces, "lxml-xml")
@@ -81,15 +82,25 @@ for blockdateipfad in blockdateienpfade:
             'pcu_console':     block.PCUConsole.text          if block.PCUConsole       else "N/A",
             'airtightness':    block.IsAirTight.text          if block.IsAirTight       else "Unknown",
             'DLC':             block.DLC.text                 if block.DLC              else "Vanilla",
-            'standalone':      block.IsStandAlone.text        if block.IsStandAlone     else "true"
+            'standalone':      block.IsStandAlone.text        if block.IsStandAlone     else "true",
+            'rangeMaxMetres':  block.MaxRangeMeters.text      if block.MaxRangeMeters   else "N/A",
+            'powerDrainBroadcastMax': block.MaxBroadcastPowerDrainkW.text if block.MaxBroadcastPowerDrainkW else "N/A",
+            'powerInRequired': block.RequiredPowerInput.text  if block.RequiredPowerInput else "N/A",
+            'powerInIdle':     block.PowerInputIdle.text      if block.PowerInputIdle   else "N/A",
+            'powerOutMax':     block.MaxPowerOutput.text      if block.MaxPowerOutput   else "N/A",
+            'powerConsumeOperation': block.OperationalPowerConsumption.text if block.OperationalPowerConsumption else "N/A",
+            'powerConsumeStandby': block.StandbyPowerConsumption.text if block.StandbyPowerConsumption else "N/A",
+            'powerConsumeMax': block.MaxPowerConsumption.text if block.MaxPowerConsumption else "N/A",
+            'powerConsumeMin': block.MinPowerConsumption.text if block.MinPowerConsumption else "N/A"
         }
 
         # Rest der Reihe mit Nullen fuellen weil nicht alle XML Element Pflicht sind
         for h in table_header:
             if(not blockDict.get(h)): blockDict[h]="0"
 
-       # Komponenenliste hat requirede und optionale Komponenten
+       # Komponentenliste hat requirede und optionale Komponenten
        # TODO was wenn es mehr als zwei Duplikate enthaelt, z.B. shelf?
+       # TODO was wenn eine Komponente nur optional und nicht auch required ist?
         for c in block.find_all("Component"):
             debugprint("    Found recipe entry "+c['Subtype'] + " "+ c['Count'])
             if( int(blockDict['recipe_'+c['Subtype']]) > 0):
@@ -100,15 +111,17 @@ for blockdateipfad in blockdateienpfade:
                 blockDict['recipe_'+c['Subtype']]=c['Count']
         
         # Mountpointliste hat mehrere Eintrage pro Seite
-        # TODO: Zur Zeit notiere ich nur, ob es mountpoints hat aber nicht wie viele
+        # TODO: Zur Zeit notiere ich nur, OB es mountpoints hat, aber nicht wie viele
         for m in block.find_all("MountPoint"):
             debugprint("    mountpoint "+m['Side'])
             blockDict['mountpoint_'+m['Side']]="available"
 
         # Ergebnis fuer diesen Block hinzufuegen
         blockliste.append(blockDict)
-    # An diesem Punkt wurde 1 Datei ausgelesen, naechste Schleife
+    # Bis hier wurde 1 Datei ausgelesen, naechste Schleife
     print("Recorded "+str(len(blockliste))+" blocks from file "+str(blockdateipfad)+".")
     debugprint(blockliste)
 #Ende der Schleife, speichern
 ErgebnistabelleSpeichern(blockliste)
+
+
