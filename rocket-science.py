@@ -5,16 +5,19 @@ debugmodus=False
 from bs4 import BeautifulSoup
 from pathlib import Path
 import re
+from time import localtime, strftime
+now = strftime("%Y%m%d-%H%M%S", localtime())
 
-table_header=["blockname","type_id","subtype_id","grid_size","armor_type","description","build_time_secs","pcu_pc","pcu_console","airtightness",
-              "RequiredPowerInput","PowerInputIdle","MaxRangeMeters","MaxBroadcastPowerDrainkW","MaxPowerOutput","OperationalPowerConsumption","StandbyPowerConsumption","MaxPowerConsumption","MinPowerConsumption",
+table_header=["blockname","type_id","subtype_id","grid_size","armor_type",
+              "description","size_HWD","build_time_secs","pcu_pc","pcu_console","airtightness",
+              "rangeMaxMeters","powerDrainBroadcastMaxkW","powerInRequired","powerInIdle","powerOutMax","powerConsumeOperational", "powerConsumeStandby", "powerConsumeMax","powerConsumeMin",
               "recipe_SteelPlate","recipe_MetalGrid","recipe_Construction","recipe_LargeTube","recipe_Thrust","recipe_Motor","recipe_Reactor","recipe_BulletproofGlass","recipe_Computer","recipe_Detector","recipe_Display","recipe_Explosives","recipe_Girder","recipe_GravityGenerator","recipe_InteriorPlate","recipe_SmallTube","recipe_Medical","recipe_SolarCell","recipe_Superconductor","recipe_RadioCommunication","recipe_ZoneChip","recipe_PowerCell","recipe_EngineerPlushie","recipe_SabiroidPlushie",
               "recipe_SteelPlate_optional","recipe_MetalGrid_optional","recipe_Construction_optional","recipe_LargeTube_optional","recipe_Thrust_optional","recipe_Motor_optional","recipe_Reactor_optional","recipe_BulletproofGlass_optional","recipe_Computer_optional","recipe_Detector_optional","recipe_Display_optional","recipe_Explosives_optional","recipe_Girder_optional","recipe_GravityGenerator_optional","recipe_InteriorPlate_optional","recipe_SmallTube_optional","recipe_Medical_optional","recipe_SolarCell_optional","recipe_Superconductor_optional","recipe_RadioCommunication_optional","recipe_ZoneChip_optional","recipe_PowerCell_optional",
-              "mountpoint_Front","mountpoint_Back","mountpoint_Left","mountpoint_Right","mountpoint_Bottom","mountpoint_Top","DLC","standalone"]
+              "mountpoint_Front","mountpoint_Back","mountpoint_Left","mountpoint_Right","mountpoint_Bottom","mountpoint_Top","DLC","Icon","standalone"]
 uebersetzungen = {}
 
 #Ausgabedatei
-tabellenpfad="SE_Block_Info.csv"
+tabellenpfad="SE_Block_Info"+now+".csv"
 #Eingabe
 sepfad=Path("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SpaceEngineers\\")
 blockinfopfad=Path(sepfad.joinpath("Content\\Data\\CubeBlocks"))
@@ -77,18 +80,21 @@ for blockdateipfad in blockdateienpfade:
             'grid_size':       block.CubeSize.text            if block.CubeSize         else "Unknown",
             'armor_type':      block.EdgeType.text            if block.EdgeType         else "N/A",
             'description':     lookup(block.Description.text) if block.Description      else "Unknown",
+            'size_HWD':        block.Size['x']+"x"+block.Size['y']+"x"+block.Size['z']  if block.Size.has_attr('x') else
+                block.Size.X.text+"x"+block.Size.Y.text+"x"+block.Size.Z.text if block.Size.X.text else "Unknown",
             'build_time_secs': block.BuildTimeSeconds.text    if block.BuildTimeSeconds else "N/A",
             'pcu_pc':          block.PCU.text                 if block.PCU              else "N/A",
             'pcu_console':     block.PCUConsole.text          if block.PCUConsole       else "N/A",
             'airtightness':    block.IsAirTight.text          if block.IsAirTight       else "Unknown",
             'DLC':             block.DLC.text                 if block.DLC              else "Vanilla",
+            'Icon':            block.Icon.text                if block.Icon             else "N/A",
             'standalone':      block.IsStandAlone.text        if block.IsStandAlone     else "true",
-            'rangeMaxMetres':  block.MaxRangeMeters.text      if block.MaxRangeMeters   else "N/A",
-            'powerDrainBroadcastMax': block.MaxBroadcastPowerDrainkW.text if block.MaxBroadcastPowerDrainkW else "N/A",
+            'rangeMaxMeters':  block.MaxRangeMeters.text      if block.MaxRangeMeters   else "N/A",
+            'powerDrainBroadcastMaxkW': block.MaxBroadcastPowerDrainkW.text if block.MaxBroadcastPowerDrainkW else "N/A",
             'powerInRequired': block.RequiredPowerInput.text  if block.RequiredPowerInput else "N/A",
             'powerInIdle':     block.PowerInputIdle.text      if block.PowerInputIdle   else "N/A",
             'powerOutMax':     block.MaxPowerOutput.text      if block.MaxPowerOutput   else "N/A",
-            'powerConsumeOperation': block.OperationalPowerConsumption.text if block.OperationalPowerConsumption else "N/A",
+            'powerConsumeOperational': block.OperationalPowerConsumption.text if block.OperationalPowerConsumption else "N/A",
             'powerConsumeStandby': block.StandbyPowerConsumption.text if block.StandbyPowerConsumption else "N/A",
             'powerConsumeMax': block.MaxPowerConsumption.text if block.MaxPowerConsumption else "N/A",
             'powerConsumeMin': block.MinPowerConsumption.text if block.MinPowerConsumption else "N/A"
