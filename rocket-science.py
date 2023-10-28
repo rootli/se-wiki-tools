@@ -9,11 +9,29 @@ from time import localtime, strftime
 now = strftime("%Y%m%d-%H%M%S", localtime())
 
 table_header=["blockname","type_id","subtype_id","grid_size","armor_type",
-              "description","size_HWD","build_time_secs","pcu_pc","pcu_console","airtightness",
-              "rangeMaxMeters","powerDrainBroadcastMaxkW","powerInRequired","powerInIdle","powerOutMax","powerConsumeOperational", "powerConsumeStandby", "powerConsumeMax","powerConsumeMin",
-              "recipe_SteelPlate","recipe_MetalGrid","recipe_Construction","recipe_LargeTube","recipe_Thrust","recipe_Motor","recipe_Reactor","recipe_BulletproofGlass","recipe_Computer","recipe_Detector","recipe_Display","recipe_Explosives","recipe_Girder","recipe_GravityGenerator","recipe_InteriorPlate","recipe_SmallTube","recipe_Medical","recipe_SolarCell","recipe_Superconductor","recipe_RadioCommunication","recipe_ZoneChip","recipe_PowerCell","recipe_EngineerPlushie","recipe_SabiroidPlushie",
-              "recipe_SteelPlate_optional","recipe_MetalGrid_optional","recipe_Construction_optional","recipe_LargeTube_optional","recipe_Thrust_optional","recipe_Motor_optional","recipe_Reactor_optional","recipe_BulletproofGlass_optional","recipe_Computer_optional","recipe_Detector_optional","recipe_Display_optional","recipe_Explosives_optional","recipe_Girder_optional","recipe_GravityGenerator_optional","recipe_InteriorPlate_optional","recipe_SmallTube_optional","recipe_Medical_optional","recipe_SolarCell_optional","recipe_Superconductor_optional","recipe_RadioCommunication_optional","recipe_ZoneChip_optional","recipe_PowerCell_optional",
-              "mountpoint_Front","mountpoint_Back","mountpoint_Left","mountpoint_Right","mountpoint_Bottom","mountpoint_Top","DLC","Icon","standalone"]
+              "description","size_HWD","build_time_secs","pcu_pc","pcu_console",
+              "airtightness","rangeMaxMeters","powerDrainBroadcastMaxkW",
+              "powerInRequired","powerInIdle","powerOutMax","powerConsumeOperational",
+              "powerConsumeStandby", "powerConsumeMax","powerConsumeMin",
+              "recipe_SteelPlate","recipe_MetalGrid","recipe_Construction",
+              "recipe_LargeTube","recipe_Thrust","recipe_Motor","recipe_Reactor",
+              "recipe_BulletproofGlass","recipe_Computer","recipe_Detector",
+              "recipe_Display","recipe_Explosives","recipe_Girder",
+              "recipe_GravityGenerator","recipe_InteriorPlate","recipe_SmallTube",
+              "recipe_Medical","recipe_SolarCell","recipe_Superconductor",
+              "recipe_RadioCommunication","recipe_ZoneChip","recipe_PowerCell",
+              "recipe_EngineerPlushie","recipe_SabiroidPlushie","recipe_SteelPlate_optional",
+              "recipe_MetalGrid_optional","recipe_Construction_optional",
+              "recipe_LargeTube_optional","recipe_Thrust_optional","recipe_Motor_optional",
+              "recipe_Reactor_optional","recipe_BulletproofGlass_optional",
+              "recipe_Computer_optional","recipe_Detector_optional","recipe_Display_optional",
+              "recipe_Explosives_optional","recipe_Girder_optional",
+              "recipe_GravityGenerator_optional","recipe_InteriorPlate_optional",
+              "recipe_SmallTube_optional","recipe_Medical_optional",
+              "recipe_SolarCell_optional","recipe_Superconductor_optional",
+              "recipe_RadioCommunication_optional","recipe_ZoneChip_optional",
+              "recipe_PowerCell_optional","mountpoint_Front","mountpoint_Back","mountpoint_Left",
+              "mountpoint_Right","mountpoint_Bottom","mountpoint_Top","DLC","Icon","standalone"]
 uebersetzungen = {}
 
 #Ausgabedatei
@@ -129,5 +147,3 @@ for blockdateipfad in blockdateienpfade:
     debugprint(blockliste)
 #Ende der Schleife, speichern
 ErgebnistabelleSpeichern(blockliste)
-
-
