@@ -9,7 +9,7 @@ from time import localtime, strftime
 now = strftime("%Y%m%d-%H%M%S", localtime())
 
 table_header=["blockname","type_id","subtype_id","grid_size","armor_type",
-              "description","size_HWD","build_time_secs","pcu_pc","pcu_console",
+              "description","size_HWD","volume","build_time_secs","pcu_pc","pcu_console",
               "airtightness","rangeMaxMeters","powerDrainBroadcastMaxkW",
               "powerInRequired","powerInIdle","powerOutMax","powerConsumeOperational",
               "powerConsumeStandby", "powerConsumeMax","powerConsumeMin",
@@ -31,7 +31,10 @@ table_header=["blockname","type_id","subtype_id","grid_size","armor_type",
               "recipe_SolarCell_optional","recipe_Superconductor_optional",
               "recipe_RadioCommunication_optional","recipe_ZoneChip_optional",
               "recipe_PowerCell_optional","mountpoint_Front","mountpoint_Back","mountpoint_Left",
-              "mountpoint_Right","mountpoint_Bottom","mountpoint_Top","DLC","Icon","standalone"]
+              "mountpoint_Right","mountpoint_Bottom","mountpoint_Top","DLC","Icon","standalone",
+              "ForceMagnitude","SlowdownFactor","FlameDamageLengthScale","FlameDamage",
+              "MinPlanetaryInfluence","MaxPlanetaryInfluence","EffectivenessAtMinInfluence",
+              "EffectivenessAtMaxInfluence"]
 uebersetzungen = {}
 
 #Ausgabedatei
@@ -100,6 +103,8 @@ for blockdateipfad in blockdateienpfade:
             'description':     lookup(block.Description.text) if block.Description      else "Unknown",
             'size_HWD':        block.Size['x']+"x"+block.Size['y']+"x"+block.Size['z']  if block.Size.has_attr('x') else
                 block.Size.X.text+"x"+block.Size.Y.text+"x"+block.Size.Z.text if block.Size.X.text else "Unknown",
+            'volume': int(block.Size['x']) * int(block.Size['y']) * int(block.Size['z'])  if block.Size.has_attr('x') else
+                int(block.Size.X.text) * int(block.Size.Y.text) * int(block.Size.Z.text) if block.Size.X.text else "Unknown",
             'build_time_secs': block.BuildTimeSeconds.text    if block.BuildTimeSeconds else "N/A",
             'pcu_pc':          block.PCU.text                 if block.PCU              else "N/A",
             'pcu_console':     block.PCUConsole.text          if block.PCUConsole       else "N/A",
@@ -115,7 +120,15 @@ for blockdateipfad in blockdateienpfade:
             'powerConsumeOperational': block.OperationalPowerConsumption.text if block.OperationalPowerConsumption else "N/A",
             'powerConsumeStandby': block.StandbyPowerConsumption.text if block.StandbyPowerConsumption else "N/A",
             'powerConsumeMax': block.MaxPowerConsumption.text if block.MaxPowerConsumption else "N/A",
-            'powerConsumeMin': block.MinPowerConsumption.text if block.MinPowerConsumption else "N/A"
+            'powerConsumeMin': block.MinPowerConsumption.text if block.MinPowerConsumption else "N/A",
+            'ForceMagnitude': block.ForceMagnitude.text       if block.ForceMagnitude else "N/A",
+            'SlowdownFactor': block.SlowdownFactor.text       if block.SlowdownFactor else "N/A",
+            'FlameDamageLengthScale': block.FlameDamageLengthScale.text if block.FlameDamageLengthScale else "N/A",
+            'FlameDamage': block.FlameDamage.text             if block.FlameDamage else "N/A",
+            'MinPlanetaryInfluence': block.MinPlanetInfluence.text if block.MinPlanetInfluence else "N/A",
+            'MaxPlanetaryInfluence': block.MaxPlanetInfluence.text if block.MaxPlanetInfluence else "N/A",
+            'EffectivenessAtMinInfluence': block.EffectivenessAtMinInfluence.text if block.EffectivenessAtMinInfluence else "N/A",
+            'EffectivenessAtMaxInfluence': block.EffectivenessAtMaxInfluence.text if block.EffectivenessAtMaxInfluence else "N/A"
         }
 
         # Rest der Reihe mit Nullen fuellen weil nicht alle XML Element Pflicht sind
