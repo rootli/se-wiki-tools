@@ -125,8 +125,8 @@ for blockdateipfad in blockdateienpfade:
             'SlowdownFactor': block.SlowdownFactor.text       if block.SlowdownFactor else "N/A",
             'FlameDamageLengthScale': block.FlameDamageLengthScale.text if block.FlameDamageLengthScale else "N/A",
             'FlameDamage': block.FlameDamage.text             if block.FlameDamage else "N/A",
-            'MinPlanetaryInfluence': block.MinPlanetInfluence.text if block.MinPlanetInfluence else "N/A",
-            'MaxPlanetaryInfluence': block.MaxPlanetInfluence.text if block.MaxPlanetInfluence else "N/A",
+            'MinPlanetaryInfluence': block.MinPlanetaryInfluence.text if block.MinPlanetaryInfluence else "N/A",
+            'MaxPlanetaryInfluence': block.MaxPlanetaryInfluence.text if block.MaxPlanetaryInfluence else "N/A",
             'EffectivenessAtMinInfluence': block.EffectivenessAtMinInfluence.text if block.EffectivenessAtMinInfluence else "N/A",
             'EffectivenessAtMaxInfluence': block.EffectivenessAtMaxInfluence.text if block.EffectivenessAtMaxInfluence else "N/A"
         }
