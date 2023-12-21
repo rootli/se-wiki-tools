@@ -59,7 +59,7 @@ def ErgebnistabelleSpeichern(blockinfo):
         # Zeilen schreiben
         for block in blockinfo:
             for h in table_header:      
-                tabelle.write(block[h]+"\t")
+                tabelle.write(str(block[h])+"\t")
                 debugprint(block[h])
             tabelle.write("\n")
 
