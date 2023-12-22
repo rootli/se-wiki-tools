@@ -8,7 +8,17 @@ import re
 from time import localtime, strftime
 now = strftime("%Y%m%d-%H%M%S", localtime())
 
-table_header=["blockname","type_id","subtype_id","grid_size","armor_type",
+component_mass={
+'Construction':8,'MetalGrid':6,'InteriorPlate':3,'SteelPlate':20,
+'Girder':6,'SmallTube':4,'LargeTube':25,'Motor':24,'Display':8,
+'BulletproofGlass':15,'Superconductor':15,'Computer':0.2,
+'Reactor':25,'Thrust':40,'GravityGenerator':800,'Medical':150,
+'RadioCommunication':8,'Detector':5,'Explosives':2,'SolarCell':6,
+'PowerCell':25,'Canvas':15,'EngineerPlushie':1,'SabiroidPlushie':1,
+'ZoneChip':0.250
+    }
+
+table_header=["blockname","type_id","subtype_id","grid_size","armor_type","mass",
               "description","size_HWD","volume","build_time_secs","pcu_pc","pcu_console",
               "airtightness","rangeMaxMeters","powerDrainBroadcastMaxkW",
               "powerInRequired","powerInIdle","powerOutMax","powerConsumeOperational",
@@ -32,7 +42,7 @@ table_header=["blockname","type_id","subtype_id","grid_size","armor_type",
               "recipe_RadioCommunication_optional","recipe_ZoneChip_optional",
               "recipe_PowerCell_optional","mountpoint_Front","mountpoint_Back","mountpoint_Left",
               "mountpoint_Right","mountpoint_Bottom","mountpoint_Top","DLC","Icon","standalone",
-              "ForceMagnitude","SlowdownFactor","FlameDamageLengthScale","FlameDamage",
+              "ForceMagnitude","FlameDamageLengthScale","FlameDamage",
               "MinPlanetaryInfluence","MaxPlanetaryInfluence","EffectivenessAtMinInfluence",
               "EffectivenessAtMaxInfluence"]
 uebersetzungen = {}
@@ -122,7 +132,6 @@ for blockdateipfad in blockdateienpfade:
             'powerConsumeMax': block.MaxPowerConsumption.text if block.MaxPowerConsumption else "N/A",
             'powerConsumeMin': block.MinPowerConsumption.text if block.MinPowerConsumption else "N/A",
             'ForceMagnitude': block.ForceMagnitude.text       if block.ForceMagnitude else "N/A",
-            'SlowdownFactor': block.SlowdownFactor.text       if block.SlowdownFactor else "N/A",
             'FlameDamageLengthScale': block.FlameDamageLengthScale.text if block.FlameDamageLengthScale else "N/A",
             'FlameDamage': block.FlameDamage.text             if block.FlameDamage else "N/A",
             'MinPlanetaryInfluence': block.MinPlanetaryInfluence.text if block.MinPlanetaryInfluence else "N/A",
@@ -135,18 +144,21 @@ for blockdateipfad in blockdateienpfade:
         for h in table_header:
             if(not blockDict.get(h)): blockDict[h]="0"
 
-       # Komponentenliste hat requirede und optionale Komponenten
-       # TODO was wenn es mehr als zwei Duplikate enthaelt, z.B. shelf?
-       # TODO was wenn eine Komponente nur optional und nicht auch required ist?
+        # Komponentenliste hat requirede und optionale Komponenten
+        # TODO was wenn es mehr als zwei Duplikate enthaelt, z.B. shelf?
+        # TODO was wenn eine Komponente nur optional und nicht auch required ist?
+        mass_counter=0
         for c in block.find_all("Component"):
             debugprint("    Found recipe entry "+c['Subtype'] + " "+ c['Count'])
             if( int(blockDict['recipe_'+c['Subtype']]) > 0):
                 # Hab schon requireden Wert, also optional component
                 blockDict['recipe_'+c['Subtype']+"_optional"]=c['Count']
+                mass_counter += component_mass[c['Subtype']] * int(c['Count'])
             else:
                 # Erste Erwaehnung, also required Component
                 blockDict['recipe_'+c['Subtype']]=c['Count']
-        
+                mass_counter += component_mass[c['Subtype']] * int(c['Count'])
+        blockDict['mass']=mass_counter
         # Mountpointliste hat mehrere Eintrage pro Seite
         # TODO: Zur Zeit notiere ich nur, OB es mountpoints hat, aber nicht wie viele
         for m in block.find_all("MountPoint"):
