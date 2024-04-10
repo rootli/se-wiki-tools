@@ -18,7 +18,17 @@ component_mass={
 'ZoneChip':0.250
     }
 
-table_header=["blockname","type_id","subtype_id","grid_size","armor_type","mass",
+component_hitpoints={
+'Construction':30,'MetalGrid':15,'InteriorPlate':15,'SteelPlate':100,
+'Girder':15,'SmallTube':15,'LargeTube':60,'Motor':40,'Display':5,
+'BulletproofGlass':60,'Superconductor':5,'Computer':1,
+'Reactor':20,'Thrust':30,'GravityGenerator':500,'Medical':70,
+'RadioCommunication':15,'Detector':4,'Explosives':5,'SolarCell':1,
+'PowerCell':50,'Canvas':15,'EngineerPlushie':5,'SabiroidPlushie':5,
+'ZoneChip':1
+    }
+
+table_header=["blockname","type_id","subtype_id","grid_size","armor_type","mass","hitpoints",
               "description","size_HWD","volume","build_time_secs","pcu_pc","pcu_console",
               "airtightness","rangeMaxMeters","powerDrainBroadcastMaxkW",
               "powerInRequired","powerInIdle","powerOutMax","powerConsumeOperational",
@@ -148,17 +158,21 @@ for blockdateipfad in blockdateienpfade:
         # TODO was wenn es mehr als zwei Duplikate enthaelt, z.B. shelf?
         # TODO was wenn eine Komponente nur optional und nicht auch required ist?
         mass_counter=0
+        hp_counter=0
         for c in block.find_all("Component"):
             debugprint("    Found recipe entry "+c['Subtype'] + " "+ c['Count'])
             if( int(blockDict['recipe_'+c['Subtype']]) > 0):
                 # Hab schon requireden Wert, also optional component
                 blockDict['recipe_'+c['Subtype']+"_optional"]=c['Count']
                 mass_counter += component_mass[c['Subtype']] * int(c['Count'])
+                hp_counter += component_hitpoints[c['Subtype']] * int(c['Count'])
             else:
                 # Erste Erwaehnung, also required Component
                 blockDict['recipe_'+c['Subtype']]=c['Count']
                 mass_counter += component_mass[c['Subtype']] * int(c['Count'])
+                hp_counter += component_hitpoints[c['Subtype']] * int(c['Count'])
         blockDict['mass']=mass_counter
+        blockDict['hitpoints']=hp_counter
         # Mountpointliste hat mehrere Eintrage pro Seite
         # TODO: Zur Zeit notiere ich nur, OB es mountpoints hat, aber nicht wie viele
         for m in block.find_all("MountPoint"):
