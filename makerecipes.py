@@ -4,8 +4,8 @@ now = strftime("%Y%m%d-%H%M%S", localtime())
 
 wikirezeptepfad="SEFandomWikiRezepte"+now+".txt" # output
 spreadsheet_path="SE_Block_Info.csv" #input
-table_header=["blockname","type_id","subtype_id","grid_size","armor_type",
-              "description","size_HWD","build_time_secs","pcu_pc","pcu_console",
+table_header=["blockname","type_id","subtype_id","grid_size","armor_type","mass","hitpoints",
+              "description","size_HWD","volume","build_time_secs","pcu_pc","pcu_console",
               "airtightness","rangeMaxMeters","powerDrainBroadcastMaxkW",
               "powerInRequired","powerInIdle","powerOutMax","powerConsumeOperational",
               "powerConsumeStandby", "powerConsumeMax","powerConsumeMin",
@@ -27,7 +27,10 @@ table_header=["blockname","type_id","subtype_id","grid_size","armor_type",
               "recipe_SolarCell_optional","recipe_Superconductor_optional",
               "recipe_RadioCommunication_optional","recipe_ZoneChip_optional",
               "recipe_PowerCell_optional","mountpoint_Front","mountpoint_Back","mountpoint_Left",
-              "mountpoint_Right","mountpoint_Bottom","mountpoint_Top","DLC","Icon","standalone"]
+              "mountpoint_Right","mountpoint_Bottom","mountpoint_Top","DLC","Icon","standalone",
+              "ForceMagnitude","FlameDamageLengthScale","FlameDamage",
+              "MinPlanetaryInfluence","MaxPlanetaryInfluence","EffectivenessAtMinInfluence",
+              "EffectivenessAtMaxInfluence"]
 debugmode=False
 def debugprint(s):
     if(debugmode):
