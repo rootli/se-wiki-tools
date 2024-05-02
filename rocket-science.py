@@ -19,7 +19,7 @@ component_mass={
     }
 
 component_hitpoints={
-'Construction':30,'MetalGrid':15,'InteriorPlate':15,'SteelPlate':100,
+'Construction':30,'MetalGrid':30,'InteriorPlate':15,'SteelPlate':100,
 'Girder':15,'SmallTube':15,'LargeTube':60,'Motor':40,'Display':5,
 'BulletproofGlass':60,'Superconductor':5,'Computer':1,
 'Reactor':20,'Thrust':30,'GravityGenerator':500,'Medical':70,
@@ -28,8 +28,7 @@ component_hitpoints={
 'ZoneChip':1
     }
 
-table_header=["blockname","type_id","subtype_id","grid_size","armor_type","mass","hitpoints",
-              "description","size_HWD","volume","build_time_secs","pcu_pc","pcu_console",
+table_header=["blockname","type_id","subtype_id","grid_size","armor_type","mass","hitpoints","size_HWD","volume","build_time_secs","pcu_pc","pcu_console",
               "airtightness","rangeMaxMeters","powerDrainBroadcastMaxkW",
               "powerInRequired","powerInIdle","powerOutMax","powerConsumeOperational",
               "powerConsumeStandby", "powerConsumeMax","powerConsumeMin",
@@ -54,7 +53,7 @@ table_header=["blockname","type_id","subtype_id","grid_size","armor_type","mass"
               "mountpoint_Right","mountpoint_Bottom","mountpoint_Top","DLC","Icon","standalone",
               "ForceMagnitude","FlameDamageLengthScale","FlameDamage",
               "MinPlanetaryInfluence","MaxPlanetaryInfluence","EffectivenessAtMinInfluence",
-              "EffectivenessAtMaxInfluence"]
+              "EffectivenessAtMaxInfluence","description","hasPhysics"]
 uebersetzungen = {}
 
 #Ausgabedatei
@@ -86,6 +85,7 @@ def ErgebnistabelleSpeichern(blockinfo):
 # Blocknamenuebersetzung nachschlagen (localisation)
 def lookup(name):
     if(uebersetzungen.get(name)):
+       name=re.sub('\s+', ' ', name) # removes /s whitespace and newlines
        return uebersetzungen[name] # gefunden
     else:
         return "(UNUSED) "+name # kaputt
@@ -147,7 +147,8 @@ for blockdateipfad in blockdateienpfade:
             'MinPlanetaryInfluence': block.MinPlanetaryInfluence.text if block.MinPlanetaryInfluence else "N/A",
             'MaxPlanetaryInfluence': block.MaxPlanetaryInfluence.text if block.MaxPlanetaryInfluence else "N/A",
             'EffectivenessAtMinInfluence': block.EffectivenessAtMinInfluence.text if block.EffectivenessAtMinInfluence else "N/A",
-            'EffectivenessAtMaxInfluence': block.EffectivenessAtMaxInfluence.text if block.EffectivenessAtMaxInfluence else "N/A"
+            'EffectivenessAtMaxInfluence': block.EffectivenessAtMaxInfluence.text if block.EffectivenessAtMaxInfluence else "N/A",
+            'hasPhysics': block.HasPhysics.text if block.HasPhysics else "N/A"
         }
 
         # Rest der Reihe mit Nullen fuellen weil nicht alle XML Element Pflicht sind
@@ -172,6 +173,9 @@ for blockdateipfad in blockdateienpfade:
                 mass_counter += component_mass[c['Subtype']] * int(c['Count'])
                 hp_counter += component_hitpoints[c['Subtype']] * int(c['Count'])
         blockDict['mass']=mass_counter
+        # Ausnahmen: 
+        if( blockDict['hasPhysics'] == "false") :
+            blockDict['mass']=0
         blockDict['hitpoints']=hp_counter
         # Mountpointliste hat mehrere Eintrage pro Seite
         # TODO: Zur Zeit notiere ich nur, OB es mountpoints hat, aber nicht wie viele
@@ -186,3 +190,5 @@ for blockdateipfad in blockdateienpfade:
     debugprint(blockliste)
 #Ende der Schleife, speichern
 ErgebnistabelleSpeichern(blockliste)
+
+
