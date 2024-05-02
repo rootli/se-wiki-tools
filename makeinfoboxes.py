@@ -5,7 +5,7 @@ now = strftime("%Y%m%d-%H%M%S", localtime())
 wikinfoboxpfad="SEWikiGGInfoBoxes"+now+".txt" # output file
 spreadsheet_path="SE_Block_Info.csv" #input file
 table_header=["blockname","type_id","subtype_id","grid_size","armor_type","mass","hitpoints",
-              "description","size_HWD","volume","build_time_secs","pcu_pc","pcu_console",
+              "size_HWD","volume","build_time_secs","pcu_pc","pcu_console",
               "airtightness","rangeMaxMeters","powerDrainBroadcastMaxkW",
               "powerInRequired","powerInIdle","powerOutMax","powerConsumeOperational",
               "powerConsumeStandby", "powerConsumeMax","powerConsumeMin",
@@ -30,7 +30,7 @@ table_header=["blockname","type_id","subtype_id","grid_size","armor_type","mass"
               "mountpoint_Right","mountpoint_Bottom","mountpoint_Top","DLC","Icon","standalone",
               "ForceMagnitude","FlameDamageLengthScale","FlameDamage",
               "MinPlanetaryInfluence","MaxPlanetaryInfluence","EffectivenessAtMinInfluence",
-              "EffectivenessAtMaxInfluence"]
+              "EffectivenessAtMaxInfluence","description","hasPhysics"]
 debugmode=True
 def debugprint(s):
     if(debugmode):
