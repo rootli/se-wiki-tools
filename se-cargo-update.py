@@ -44,7 +44,9 @@ class TemplateModifier(TemplateModifierBase):
             # for example, we don't want to modify template documentation or user sandboxes
             return
         print("Processing page: "+ self.current_page.name)
-
+ 
+        template.add('DataFunction', '')
+        template.add('DataCategory', '')
         # determine whether large/small/both block, then set known values
         if(self.current_page.name+"_Small" in data):
             #Defaults
@@ -63,7 +65,7 @@ class TemplateModifier(TemplateModifierBase):
             template.add('DataRangeSmall', '')
             #Overwrite defaults with values
             template.add('DataCategory', infoSmall['blockCategory'])
-            template.add('DataFunction', '')
+            template.add('DataFunction', infoSmall['description'])
             template.add('DataFitsSmall', 'yes')
             template.add('DataMassSmall', infoSmall['mass'])
             template.add('DataHPSmall', infoSmall['hitpoints'])
@@ -85,8 +87,6 @@ class TemplateModifier(TemplateModifierBase):
                 template.add('DataRangeSmall', infoSmall['rangeMaxMeters'])
         else:
             template.add('DataFitsSmall', '') # empty means no
-            template.add('DataFunction', '')
-            template.add('DataCategory', '')
 
         if(self.current_page.name+"_Large" in data):
             #Defaults
@@ -105,7 +105,7 @@ class TemplateModifier(TemplateModifierBase):
             template.add('DataRangeLarge', '')
             #Overwrite defaults with values
             template.add('DataCategory', infoLarge['blockCategory'])
-            template.add('DataFunction', '')
+            template.add('DataFunction', infoLarge['description'])
             template.add('DataFitsLarge', 'yes')
             template.add('DataMassLarge', infoLarge['mass'])
             template.add('DataHPLarge', infoLarge['hitpoints'])
@@ -126,9 +126,7 @@ class TemplateModifier(TemplateModifierBase):
             if(int(infoLarge['rangeMaxMeters'])>0):
                 template.add('DataRangeLarge', infoLarge['rangeMaxMeters'])
         else:
-            template.add('DataFitsLarge', '') # empty means no  
-            template.add('DataFunction', '')
-            template.add('DataCategory', '')
+            template.add('DataFitsLarge', '') # empty means no 
             
         #if (recipe := self.get_recipe_text(info)) is None:
         #    return
