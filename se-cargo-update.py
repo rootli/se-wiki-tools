@@ -43,6 +43,8 @@ class TemplateModifier(TemplateModifierBase):
             # don't do anything outside of the main namespace
             # for example, we don't want to modify template documentation or user sandboxes
             return
+        if(self.current_page.name+"_Small" not in data and self.current_page.name+"_Large" not in data): 
+            return
         print("Processing page: "+ self.current_page.name)
  
         template.add('DataFunction', '')
@@ -65,7 +67,8 @@ class TemplateModifier(TemplateModifierBase):
             template.add('DataRangeSmall', '')
             #Overwrite defaults with values
             template.add('DataCategory', infoSmall['blockCategory'])
-            template.add('DataFunction', infoSmall['description'])
+            template.add('DataDLC', infoSmall['DLC'])
+            template.add('DataFunction', infoSmall['description'][:67]+"...")
             template.add('DataFitsSmall', 'yes')
             template.add('DataMassSmall', infoSmall['mass'])
             template.add('DataHPSmall', infoSmall['hitpoints'])
@@ -105,7 +108,8 @@ class TemplateModifier(TemplateModifierBase):
             template.add('DataRangeLarge', '')
             #Overwrite defaults with values
             template.add('DataCategory', infoLarge['blockCategory'])
-            template.add('DataFunction', infoLarge['description'])
+            template.add('DataDLC', infoLarge['DLC'])
+            template.add('DataFunction', infoLarge['description'][:67]+"...")
             template.add('DataFitsLarge', 'yes')
             template.add('DataMassLarge', infoLarge['mass'])
             template.add('DataHPLarge', infoLarge['hitpoints'])
