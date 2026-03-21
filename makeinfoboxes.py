@@ -1,11 +1,15 @@
-import copy
-from time import localtime, strftime
+### Reads output of rocket-science.py: CSV file containing Space Engineers v205 game data.
+### Converts block info fields into mediawiki syntax and outputs them as text file.
+### By AdaRynin https://github.com/rootli
+
+import copy # for complex dict
+from time import localtime, strftime # just for output file timestamp
 now = strftime("%Y%m%d-%H%M%S", localtime())
 
 wikinfoboxpfad="SEWikiGGInfoBoxes"+now+".txt" # output file
 spreadsheet_path="SE_Block_Info.csv" #input file
-table_header=["blockname","type_id","subtype_id","grid_size","armor_type","mass","hitpoints",
-              "size_HWD","volume","build_time_secs","pcu_pc","pcu_console",
+table_header=["blockname","type_id","subtype_id","grid_size","armor_type","mass","blockCategory",
+              "hitpoints","size_HWD","volume","build_time_secs","pcu_pc","pcu_console",
               "airtightness","rangeMaxMeters","powerDrainBroadcastMaxkW",
               "powerInRequired","powerInIdle","powerOutMax","powerConsumeOperational",
               "powerConsumeStandby", "powerConsumeMax","powerConsumeMin",
@@ -26,7 +30,10 @@ table_header=["blockname","type_id","subtype_id","grid_size","armor_type","mass"
               "recipe_SmallTube_optional","recipe_Medical_optional",
               "recipe_SolarCell_optional","recipe_Superconductor_optional",
               "recipe_RadioCommunication_optional","recipe_ZoneChip_optional",
-              "recipe_PowerCell_optional","mountpoint_Front","mountpoint_Back","mountpoint_Left",
+              "recipe_PowerCell_optional","recipe_PrototechFrame","recipe_PrototechPanel",
+              "recipe_PrototechCapacitor","recipe_PrototechPropulsionUnit",
+              "recipe_PrototechMachinery","recipe_PrototechCircuitry","recipe_PrototechCoolingUnit",
+              "mountpoint_Front","mountpoint_Back","mountpoint_Left",
               "mountpoint_Right","mountpoint_Bottom","mountpoint_Top","DLC","Icon","standalone",
               "ForceMagnitude","FlameDamageLengthScale","FlameDamage",
               "MinPlanetaryInfluence","MaxPlanetaryInfluence","EffectivenessAtMinInfluence",
@@ -35,43 +42,55 @@ debugmode=True
 def debugprint(s):
     if(debugmode):
         print(s)
-
-        
+ 
 content={}  # temp var in loop, needs copy()
 blockdict={} # result var
 firstRow=True # to skip table header
 
-
-
-
-
 def lookUpColumn(linesplit,columnName):
-    return linesplit[table_header.index(columnName)]
+    datacell = linesplit[table_header.index(columnName)]
+    if( datacell != "N/A"):
+        return datacell
+    else:
+        return ''
 
 def saveOneSetOfDataPoints(uiname,grid_size,linesplit):
     '''
     nimmt blockinfo, extrahiert zeile, speichert Wert im dict unter key
-    "Componentenname \t Large oder Small \ data 1 \t data 2 \t data3"    
+    "Componentenname \t Large oder Small \t data 1 \t data 2 \t data3"    
     '''
-    gridsize=lookUpColumn(linesplit,'grid_size')
+    gridsize=lookUpColumn(linesplit,'grid_size')      
+    content["DataCategory"]=lookUpColumn(linesplit,'blockCategory')
+    content["DataDLC"]=lookUpColumn(linesplit,'DLC')
+    content["DataFunction"]=lookUpColumn(linesplit,'description')[:67]+"..."
     if(gridsize=="Large"):
         content["DataFitsLarge"]='yes'
         content["DataMassLarge"]=lookUpColumn(linesplit,'mass')
         content["DataHPLarge"]=lookUpColumn(linesplit,'hitpoints')
-        content["DataPowerLarge"]=lookUpColumn(linesplit,'powerInRequired')
+        content["DataPowerLarge"]=lookUpColumn(linesplit,'powerInRequired') #default
+        if(content["DataPowerLarge"] == "0"):
+            content["DataPowerLarge"]=lookUpColumn(linesplit,'powerConsumeMax')
+        if(content["DataPowerLarge"] == "0"):
+            content["DataPowerLarge"]=lookUpColumn(linesplit,'powerOutMax')
         content["DataPcuLarge"]=lookUpColumn(linesplit,'pcu_pc')
         content["DataSizeLarge"]= lookUpColumn(linesplit,'size_HWD')
         content["DataTimeLarge"]=lookUpColumn(linesplit,'build_time_secs')
+        content["DataForceLarge"]=lookUpColumn(linesplit,'ForceMagnitude')  
+        content["DataRangeLarge"]=lookUpColumn(linesplit,'rangeMaxMeters')  
     else:
         content["DataFitsSmall"]='yes'
         content["DataMassSmall"]=lookUpColumn(linesplit,'mass')
         content["DataHPSmall"]=lookUpColumn(linesplit,'hitpoints')
-        content["DataPowerSmall"]=lookUpColumn(linesplit,'powerInRequired')
+        content["DataPowerSmall"]=lookUpColumn(linesplit,'powerInRequired') #default
+        if(content["DataPowerSmall"] == "0"):
+            content["DataPowerSmall"]=lookUpColumn(linesplit,'powerConsumeMax')
+        if(content["DataPowerSmall"] == "0"):
+            content["DataPowerSmall"]=lookUpColumn(linesplit,'powerOutMax')
         content["DataPcuSmall"]=lookUpColumn(linesplit,'pcu_pc')
         content["DataSizeSmall"]= lookUpColumn(linesplit,'size_HWD')
         content["DataTimeSmall"]=lookUpColumn(linesplit,'build_time_secs')
-
-
+        content["DataForceSmall"]=lookUpColumn(linesplit,'ForceMagnitude')
+        content["DataRangeSmall"]=lookUpColumn(linesplit,'rangeMaxMeters')
 
 print("Reading from "+spreadsheet_path)
 with open(spreadsheet_path,'r') as fin:
@@ -100,96 +119,15 @@ debugprint(blockdict)
 
 
 longtemplate = """
-<!--
-This is a data page for blocks or items. It should not render any text. Instead, it fills all the variables for the item it represents.
-Define all variables. Leave unnecessary ones blank in case another data page was loaded previously.
-For help, go to http://spaceengineers.wiki.gg/wiki/Template:Data_Preload
-
-VARIABLES:
-
-Names:
-Enter a name matching the page name, do not use magic words. Name is used to automatically generate standard icon filepaths, etc.
-SortableName is is displayed in sorted lists. Put the size qualifier at the end. For example, for Large Cargo Container, enter "Cargo Container, Large".
--->{{#vardefine:DataName|%s}}<!--
--->{{#vardefine:DataSortableName|}}<!--
-
-Icon file and caption:
-Only if custom icon. Standard Icon_Block*.png or Icon_Item*.png is loaded automatically.
-Entering the caption is optional.
--->{{#vardefine:DataIcon|}}<!--
--->{{#vardefine:DataCaption|}}<!--
-
-Category:
-* Component - Items used to build blocks. 
-* Decorative - Furniture and DLC blocks. 
-* Defense - Weapons or defensive blocks. 
-* Facility - Facilities and production blocks.
-* Functional - Blocks that keep the ship flying. 
-* Material - Items used to make Components and Tools. 
-* Mobility - Blocks that apply thrust, propulsion, rotation.
-* Ore - Items used to create Materials. 
-* Power - Blocks that generate power. 
-* Storage - Blocks that hold items.
-* Structural - Blocks that provide support. 
-* Tool - Handheld equipment, tool items. 
--->{{#vardefine:DataCategory|}}<!--
-
-Function:
-A short description of what the item or block does.
--->{{#vardefine:DataFunction|}}<!--
-
-Item details:
-Format all numbers in standard US style, e.g. #,###,###
-Do not include units (i.e. do not include "kg" or "N")
-Enter mass in kilograms.
-Enter volume in litres.
--->{{#vardefine:DataMassItem|}}<!--
--->{{#vardefine:DataHPItem|}}<!--
--->{{#vardefine:DataVolumeItem|}}<!--
-
-
-Small Grid Block details:
-Enter DataFitsSmall as "yes" or leave blank.
-Format all numbers in standard US style. e.g. #,###,###
-Do not include units (i.e. Do not include "kg" or "N")
-Enter mass in kilograms.
-Enter power in kilowatts. Negative number for power consumption, or positive number for power production.
-Enter force in Newtons.
-Enter range in meters.
-Enter size in Height x Width x Depth, e.g. 1x2x3.
-Enter time to build in seconds
--->{{#vardefine:DataFitsSmall|%s}}<!--
--->{{#vardefine:DataMassSmall|%s}}<!--
--->{{#vardefine:DataHPSmall|%s}}<!--
--->{{#vardefine:DataPowerSmall|%s}}<!--
--->{{#vardefine:DataForceSmall|}}<!--
--->{{#vardefine:DataRangeSmall|}}<!--
--->{{#vardefine:DataPcuSmall|%s}}<!--
--->{{#vardefine:DataSizeSmall|%s}}<!--
--->{{#vardefine:DataTimeSmall|%s}}<!--
-
-Large Grid Block details:
-Enter DataFitsLarge as "yes" or leave blank.
-Format all numbers with standard US style. e.g. #,###,###
-Do not include units (i.e. Do not include "kg" or "N")
-Enter mass in kilograms.
-Enter power in kilowatts. Negative number for power consumption, or positive number for power production.
-Enter force in Newtons.
-Enter range in meters.
-Enter PCU in units.
-Enter size in Height x Width x Depth, e.g. 1x2x3.
-Enter time to build in seconds.
--->{{#vardefine:DataFitsLarge|%s}}<!--
--->{{#vardefine:DataMassLarge|%s}}<!--
--->{{#vardefine:DataHPLarge|%s}}<!--
--->{{#vardefine:DataPowerLarge|%s}}<!--
--->{{#vardefine:DataForceLarge|}}<!--
--->{{#vardefine:DataRangeLarge|}}<!--
--->{{#vardefine:DataPcuLarge|%s}}<!--
--->{{#vardefine:DataSizeLarge|%s}}<!--
--->{{#vardefine:DataTimeLarge|%s}}<!--
-
---><noinclude>{{Data Page Flag}}</noinclude>
+{{Info Block | name=%s | DataCategory=%s | DataDLC=%s | DataFunction=%s
+| DataFitsSmall=%s | DataMassSmall=%s | DataHPSmall=%s | DataCapacitySmall=
+| DataCapacityUnitSmall=kg | DataPowerSmall=%s | DataPowerUnitSmall=kW
+| DataForceSmall=%s | DataRangeSmall=%s | DataPcuSmall=%s | DataSizeSmall=%s
+| DataTimeSmall=%s
+| DataFitsLarge=%s | DataMassLarge=%s | DataHPLarge=%s | DataCapacityLarge=
+| DataCapacityUnitLarge=kg | DataPowerLarge=%s | DataPowerUnitLarge=kW
+| DataForceLarge=%s | DataRangeLarge=%s | DataPcuLarge=%s | DataSizeLarge=%s
+| DataTimeLarge=%s}}
 """ 
 
 
@@ -200,14 +138,16 @@ with open(wikinfoboxpfad, "a") as wikirezepte:
         datapointsPrinted=[]
         DatapointIndex=1 # reset
         debugprint("\n\n"+blockname)
-        # Entry ist selbst auch ein dict
+        ### Entry ist selbst auch ein dict
         entry_sorted=dict(sorted(entry.items()))
-        
+        ### Large Grid, Small grid is all or nothing
         if(not "DataFitsSmall" in entry):
             entry["DataFitsSmall"]=''
             entry["DataMassSmall"]=''
             entry["DataHPSmall"]=''
             entry["DataPowerSmall"]=''
+            entry["DataForceSmall"]=''
+            entry["DataRangeSmall"]=''
             entry["DataPcuSmall"]=''
             entry["DataSizeSmall"]= ''
             entry["DataTimeSmall"]=''
@@ -216,10 +156,18 @@ with open(wikinfoboxpfad, "a") as wikirezepte:
             entry["DataMassLarge"]=''
             entry["DataHPLarge"]=''
             entry["DataPowerLarge"]=''
+            entry["DataForceLarge"]=''
+            entry["DataRangeLarge"]=''
             entry["DataPcuLarge"]=''
             entry["DataSizeLarge"]= ''
             entry["DataTimeLarge"]=''
         debugprint(entry)
-        wikirezepte.write("\n"+longtemplate% (blockname,entry['DataFitsSmall'],entry['DataMassSmall'],entry['DataHPSmall'],entry['DataPowerSmall'],entry['DataPcuSmall'],entry['DataSizeSmall'],entry['DataTimeSmall'],entry['DataFitsLarge'],entry['DataMassLarge'],entry['DataHPLarge'],entry['DataPowerLarge'],entry['DataPcuLarge'],entry['DataSizeLarge'],entry['DataTimeLarge'])+"\n")
-        wikirezepte.write("\n\n")
+        ### Neue Eintraege hier hinzu, in der Reihenfolge der %s im Template!
+        wikirezepte.write("\n"+longtemplate% (blockname,
+                                              entry['DataCategory'],entry['DataDLC'],entry['DataFunction'],
+                                              entry['DataFitsSmall'],
+                                              entry['DataMassSmall'],entry['DataHPSmall'],entry['DataPowerSmall'],entry['DataForceSmall'],entry['DataRangeSmall'],entry['DataPcuSmall'],entry['DataSizeSmall'],entry['DataTimeSmall'],
+                                              entry['DataFitsLarge'],
+                                              entry['DataMassLarge'],entry['DataHPLarge'],entry['DataPowerLarge'],entry['DataForceLarge'],entry['DataRangeLarge'],entry['DataPcuLarge'],entry['DataSizeLarge'],entry['DataTimeLarge'])+"\n")
+        wikirezepte.write("\n")
 print("Done. Output in "+wikinfoboxpfad)
