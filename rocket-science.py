@@ -1,8 +1,9 @@
 ### Reads Space Engineers v204/v205 game data (block info and recipes)
-### and outputs a CSV spreadsheet.
+### and outputs a CSV spreadsheet. 
 ### By AdaRynin https://github.com/rootli
 
 ### Customise your SE path if not in default Steam directory
+### install python 3.12
 ### pip install beautifulsoup4
 ### pip install lxml
 
@@ -15,14 +16,15 @@ from time import localtime, strftime # just for output file timestamp
 now = strftime("%Y%m%d-%H%M%S", localtime())
 
 ### Eingabedateien
-sepfad=Path("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SpaceEngineers\\") # customise if needed
+sepfad=Path("D:\\Games\\steamapps\\common\\SpaceEngineers\\") # customise if needed
+# sepfad=Path("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SpaceEngineers\\") # default
 blockinfopfad=Path(sepfad.joinpath("Content\\Data\\CubeBlocks"))
 uebersetzungenpfad=Path(sepfad.joinpath("Content\\Data\\Localization\\MyTexts.resx"))
 kategorienpfad=Path(sepfad.joinpath("Content\\Data\\BlockCategories.sbc"))
 ### Ausgabedatei
 tabellenpfad="SE_Block_Info"+now+".csv"
 
-# Koennte man auch auslesen, aber aendert sich eh "nie<tm>", selten kommen neue hinzu
+# Koennte man auch auslesen, aber aendert sich eh "nie<tm>", selten kommen neue hinzu. In kg.
 
 component_mass={
 'Construction':8,'MetalGrid':6,'InteriorPlate':3,'SteelPlate':20,
@@ -77,7 +79,7 @@ table_header=["blockname","type_id","subtype_id","grid_size","armor_type","mass"
               "recipe_PrototechMachinery","recipe_PrototechCircuitry","recipe_PrototechCoolingUnit",
               "mountpoint_Front","mountpoint_Back","mountpoint_Left",
               "mountpoint_Right","mountpoint_Bottom","mountpoint_Top","DLC","Icon","standalone",
-              "ForceMagnitude","FlameDamageLengthScale","FlameDamage",
+              "ForceMagnitude","FlameDamageLengthScale","FlameDamage","DeformationRatio",
               "MinPlanetaryInfluence","MaxPlanetaryInfluence","EffectivenessAtMinInfluence",
               "EffectivenessAtMaxInfluence","description","hasPhysics"]
 
@@ -108,7 +110,7 @@ def lookupName(name):
     '''Blocknamenuebersetzung nachschlagen (English localisation)'''
     if(uebersetzungen.get(name)):
         # whitespace und newlines normalisieren
-        name=re.sub('\s+', ' ', name) 
+        name=re.sub('\\s+', ' ', name) 
         # gefunden
         return uebersetzungen[name] 
     else:
@@ -196,6 +198,7 @@ for blockdateipfad in blockdateienpfade:
             'ForceMagnitude': block.ForceMagnitude.text       if block.ForceMagnitude else "",
             'FlameDamageLengthScale': block.FlameDamageLengthScale.text if block.FlameDamageLengthScale else "",
             'FlameDamage': block.FlameDamage.text             if block.FlameDamage else "",
+            'DeformationRatio': block.DeformationRatio.text   if block.DeformationRatio else "",
             'MinPlanetaryInfluence': block.MinPlanetaryInfluence.text if block.MinPlanetaryInfluence else "",
             'MaxPlanetaryInfluence': block.MaxPlanetaryInfluence.text if block.MaxPlanetaryInfluence else "",
             'EffectivenessAtMinInfluence': block.EffectivenessAtMinInfluence.text if block.EffectivenessAtMinInfluence else "",
