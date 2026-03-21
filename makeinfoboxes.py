@@ -35,7 +35,7 @@ table_header=["blockname","type_id","subtype_id","grid_size","armor_type","mass"
               "recipe_PrototechMachinery","recipe_PrototechCircuitry","recipe_PrototechCoolingUnit",
               "mountpoint_Front","mountpoint_Back","mountpoint_Left",
               "mountpoint_Right","mountpoint_Bottom","mountpoint_Top","DLC","Icon","standalone",
-              "ForceMagnitude","FlameDamageLengthScale","FlameDamage",
+              "ForceMagnitude","FlameDamageLengthScale","FlameDamage","DeformationRatio",
               "MinPlanetaryInfluence","MaxPlanetaryInfluence","EffectivenessAtMinInfluence",
               "EffectivenessAtMaxInfluence","description","hasPhysics"]
 debugmode=True
