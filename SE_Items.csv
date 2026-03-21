@@ -1,0 +1,133 @@
+title	image	caption	type	mass	volume	craft	price	hitpoints	nutrition	healing	ammo	damage	firerate	trigger	reload	range	spread	speed	reach
+Artillery Shell		Ammunition for Artillery and Artillery Turret	Ammunition	100 kg 	100 L														 
+Assault Cannon Shell		Ammunition for Assault Cannons and Assault Cannon Turrets	Ammunition	60 kg 	30 L														 
+Autocannon Magazine		Ammunition for Autocannons and Autocannon Turrets 	Ammunition	40 kg 	24 L														 
+Fireworks Box		Ammunition for the Fireworks Launcher	Ammunition	10 kg 	6 L														 
+Flare Gun Clip		Ammunition for a flare gun 	Ammunition	0.05 kg 	0.05 L														 
+Gatling Ammo Box		Ammunition for Gatling Guns and Gatling Turrets	Ammunition	35 kg 	16 L														 
+Large Railgun Sabot		Ammunition for the large-grid Railgun	Ammunition	60 kg 	40 L														 
+MR-20 Magazine		Ammunition for MR-20 Rifles 	Ammunition	0.6 kg 	0.2 L														 
+MR-30E Magazine		Ammunition for MR-30E Rifles	Ammunition	0.9 kg 	0.3 L														 
+MR-50A Magazine		Ammunition for MR-50A Rifles 	Ammunition	1.5 kg 	0.5 L														 
+MR-8P Magazine		Ammunition for MR-8P Rifles 	Ammunition	0.4 kg 	0.15 L														 
+Rocket		Ammunition for Rocket Launchers and Rocket Turrets	Ammunition	45 kg 	60 L														 
+S-10 Magazine		Ammunition for S-10 Pistols 	Ammunition	0.15 kg 	0.1 L														 
+S-10E Magazine		Ammunition for S-10E Pistols 	Ammunition	0.15 kg 	0.10 L														 
+S-20A Magazine		Ammunition for S-20A Pistols 	Ammunition	0.3 kg 	0.15 L														 
+Small Railgun Sabot		Ammunition for the small-grid Railgun 	Ammunition	10.0 kg 	8 L														 
+Bulletproof Glass		Mid-game component	Component	15.0 kg 	8 L		200sc-1000sc 	60											 
+Computer		Early-game component	Component	0.2 kg 	1 L		300sc-1000sc 	1											 
+Construction Comp.		Early-game component	Component	8.0 kg 	2 L		100sc-1000sc 	30											 
+Detector Components		Mid-game component	Component	5.0 kg 	6 L		10sc-50sc 	4											 
+Display		Early-game component	Component	8.0 kg 	6 L		20sc-500sc 	5											 
+Engineer Plushie		rare component	Component	1 kg 	3 L	uncraftable		5											 
+Explosives		End-game component	Component	2.00 kg 	2 L		6sc-18sc 	5											 
+Girder		Early-game component	Component	6.00 kg 	2 L		40sc-400sc 	15											 
+Gravity Comp.		End-game component	Component	800 kg 	200 L	10 sec	10sc-50sc 	500											 
+Interior Plate		Early-game component	Component	3.00 kg 	5 L	1 sec	100sc-1000sc 	15											 
+Large Steel Tube		Mid-game component	Component	25.0 kg 	38 L	2 sec	80sc-500sc 	60											 
+Medical Components		Mid-game component	Component	150.0 kg 	160 L	6 sec 	100sc-500sc 	70											 
+Metal Grid		Mid-game component	Component	6.0 kg 	15 L	2 sec 	125sc-1000sc 	30											 
+Motor		Early-game component	Component	24.0 kg 	8 L	3 sec 	100sc-1000sc 	40											 
+Power Cell		Mid-game component	Component	25.0 kg 	40 L	4 sec 	10sc-120sc 	50											 
+Prototech Capacitor		Rare Prototech component	Component	20.0 kg 	50 L	1 sec 	250sc-2500sc 	80											 
+Prototech Circuitry		Rare Prototech component	Component	60.0 kg 	20 L	11 sec 	250sc-2500sc 	100											 
+Prototech Cooling Unit		Rare Prototech component	Component	250 kg 	80 L	9 sec 	250sc-2500sc 	150											 
+Prototech Frame		Rare Prototech component	Component	100 kg 	50 L	uncraftable	250sc-2500sc 	1000											 
+Prototech Machinery		Rare Prototech component	Component	80.0 kg 	35 L	12 sec 	250sc-2500sc 	250											 
+Prototech Panel		Rare Prototech component	Component	30.0 kg 	6 L	4 sec 	250sc-2500sc 	300											 
+Prototech Propulsion Unit		Rare Prototech component	Component	240 kg 	160 L	14 sec 	250sc-2500sc 	200											 
+Radio-comm Comp.		Mid-game component	Component	8.0 kg 	70 L	4 sec 	10sc-50sc 	15											 
+Reactor Comp.		End-game component	Component	25.0 kg 	8 L	8 sec 	10sc-100sc 	20											 
+Saberoid Plushie		rare component	Component	1.0 kg 	3 L	uncraftable		5											 
+Small Steel Tube		Mid-game component	Component	4.0 kg 	2 L	1 sec 	60sc-1000sc 	15											 
+Solar Cell		Early-game component	Component	6.0 kg 	12 L	2 sec 	10sc-30sc 	1											 
+Steel Plate		Early-game component	Component	20.0 kg 	3 L	1 sec 	100sc-1000sc 	100											 
+Superconductor		End-game component	Component	15.0 kg 	8 L	8 sec	10sc-100sc 	5											 
+Thruster Components		Mid-game component	Component	40.0 kg 	10 L	4 sec 	10sc-100sc 	30											 
+Canvas		refills parachute hatches	Consumable	15 g 	8 L	4 sec 	10sc-50sc 												 
+Clang Cola		Heals engineers	Consumable	1 kg 	1 L	uncraftable													 
+Cosmic Coffee		Heals engineers	Consumable	1 kg 	1 L	uncraftable													 
+Medkit		Heals engineers	Consumable	9 kg	9 L	uncraftable	750sc 												 
+Powerkit		refills an engineer’s suit power	Consumable	9 kg	9 L	uncraftable													 
+Space Credits		trading currency	Consumable	0.01 kg 	0 L	uncraftable	1sc												 
+Zone Chip		charges a safe zone	Consumable	0.025 kg 	0 L	uncraftable	112000 sc 												 
+Datapad		stores notes and GPS coordinates 	Equipment	0.20 kg 	0.40 L														 
+Hydrogen Bottle		refills an engineer's jetpack fuel 	Equipment	30 kg 	120 L														 
+Oxygen Bottle		refills an engineer's suit reservoir 	Equipment	30 kg 	120 L														 
+Cobalt Ingot		refined cobalt ore	Material	1 kg 	0.112 L 														 
+Gold Ingot		refined gold ore	Material	1 kg 	0.052 L 														 
+Gravel		refined stone	Material	1 kg 	0.37 L 														 
+Iron Ingot		refined iron ore	Material	1 kg 	0.127 L 														 
+Magnesium Powder		refined magnesium ore	Material	1 kg 	0.575 L 														 
+Nickel Ingot		refined nickel ore	Material	1 kg 	0.112 L 														 
+Platinum Ingot		refined platinum ore	Material	1 kg 	0.047 L 														 
+Silicon Wafer		refined silicon ore	Material	1 kg 	0.429 L 														 
+Silver Ingot		refined silver ore	Material	1 kg 	0.095 L 														 
+Uranium Ingot		refined uranium ore	Material	1 kg 	0.052 L 														 
+Cobalt Ore		an uncommon ore	Ore	1 kg 	0.37 L 														 
+Gold Ore		a rare ore	Ore	1 kg 	0.37 L 														 
+Ice		H2O can be broken down into Hydrogen and Oxygen	Ore	1 kg 	0.37 L 														 
+Iron Ore		a common ore	Ore	1 kg 	0.37 L 														 
+Magnesium Ore		a common ore	Ore	1 kg 	0.37 L 														 
+Nickel Ore		a common ore	Ore	1 kg 	0.37 L 														 
+Platinum Ore		a very rare ore	Ore	1 kg 	0.37 L 														 
+Prototech Scrap		drops from damaged Prototech blocks	Ore	10 kg 	1.5 L 														 
+Scrap Metal		drops from damaged blocks	Ore	1 kg 	0.254 L 														 
+Silicon Ore		a common ore	Ore	1 kg 	0.37 L 														 
+Silver Ore		an uncommon ore	Ore	1 kg 	0.37 L 														 
+Stone		the most common ore	Ore	1 kg 	0.37 L 														 
+Uranium Ore		the rarest ore	Ore	1 kg 	0.37 L 														 
+Elite Grinder		best salvaging tool	Tool	3 kg 	20 L													5.0	1.6 
+Elite Hand Drill		best mining tool	Tool	22 kg 	25 L 													5.0	1.6 
+Elite Welder		best building tool	Tool	5 kg 	8 L 													5.0	1.6 
+Enhanced Grinder		good salvaging tool	Tool	3 kg 	20 L													1.5	1.2 
+Enhanced Hand Drill		good mining tool	Tool	22 kg 	25 L 													1.5	1.2 
+Enhanced Welder		good building tool	Tool	5 kg 	8 L 													1.5	1.2 
+Standard Grinder		slowest cheapest salvaging tool	Tool	3 kg 	20 L													1.0 	1.0 
+Standard Hand Drill		slowest cheapest mining tool	Tool	22 kg 	25 L 													1.0 	1.0 
+Proficient Grinder		better salvaging tool	Tool	3 kg 	20 L													2.0	1.4 
+Proficient Hand Drill		better mining tool	Tool	22 kg 	25 L 													2.0	1.4 
+Proficient Welder		better building tool	Tool	5 kg 	8 L 													2.0	1.4 
+Standard Welder		slowest cheapest building tool	Tool	5 kg 	8 L 													1.0 	1.0 
+Flare Gun		visually signals your position with light	Weapon	1 kg 	6 L						 Flare Gun Clip	3 (penetration+ricochet) 	120 RPM 	Semi 	1.8 sec 	480m 	5° / 2° 		 
+MR-20 Rifle		standard issue rifle 	Weapon	3 kg	20 L						 MR-20 Magazine	45 / 30 / 90 (impact) 	450 RPM 	Semi 	2.4 sec 	800m 	3° / 0.15°		 
+MR-30E Rifle		elite rifle	Weapon	3 kg	20 L						 MR-30E Magazine	42 / 28 / 84 (impact) 	600 RPM 	3-round burst 	2.4 sec 	800m 	3° / 0.15°		 
+MR-50A Rifle		automatic rifle 	Weapon	3 kg	20 L						 MR-50A Magazine	36 / 24 / 72 (impact) 	514 RPM 	Automatic 	3.6 sec 	800m 	3° / 0.2°		 
+MR-8P Rifle		sniper rifle 	Weapon	3 kg	20 L						 MR-8P Magazine	72 / 48 / 144 (impact) 	300 RPM 	Semi 	2.4 sec 	800m 	3.5° / 0.1°		 
+PRO-1 Rocket Launcher		a powerful but slow weapon	Weapon	25 kg 	125 L 						 Rocket 	500 (explosive) 	240 RPM 	Semi 	6 sec 	800m 	3° / 0.1°		 
+RO-1 Rocket Launcher		a powerful but slow weapon	Weapon	25 kg 	125 L 						 Rocket 	500 (explosive) 	240 RPM 	Semi 	4 sec 	800m 	3° / 1°		 
+S-10 Pistol		standard issue sidearm 	Weapon	1 kg 	6 L	4 sec					 S-10 Magazine	10.5 / 21 / 63 (impact) 	450 RPM 	Semi 	1.4 sec 	250m 	0.9° / 0.3°		 
+S-10E Pistol		elite handgun 	Weapon	1 kg 	6 L						 S-10E Magazine	13 / 26 / 78 (impact) 	450 RPM 	Semi 	1.4 sec 	250m 	0.9° / 0.2°		 
+S-20A Pistol		full automatic handgun 	Weapon	1 kg 	8 L						 S-20A Magazine	9 / 18 / 54 (impact) 	900 RPM 	Automatic 	1.8 sec 	250m 	0.9° / 0.3°		 
+Algae		Used in Food Processor	Ingredient	4.5 kg	5 L				0	0									
+Vegetables		Used in Food Processor	Ingredient	3 kg	2.5 L				5	10									
+Mushrooms		Used in Food Processor	Ingredient	1.25 kg	8 L				6	10									
+Fruits		Used in Food Processor	Ingredient	4 kg	3 L				6	10									
+Grains		Used in Food Processor	Ingredient	5 kg 	2 L				0	0									
+Mammal Meat (Cooked)		Used in Food Processor	Ingredient	3.75 kg	0.88 L				18	10									
+Insect Meat (Cooked)		Used in Food Processor	Ingredient	3 kg	1.4 L				14	10									
+Mammal Meat (Raw)		Used in Food Processor	Ingredient	5 kg	1.15 L				-36	-36									
+Insect Meat (Raw)		Used in Food Processor	Ingredient	4 kg	2 L				-36	-36									
+Meal Pack (Kelp Crisps)		Food restores nutrition and health	Food	1.5 kg 	1.25 L				12	10									
+Meal Pack (Fruit Bar)		Food restores nutrition and health	Food	1.5 kg 	1.25 L				18	10									
+Meal Pack (Garden Slaw)		Food restores nutrition and health	Food	1.5 kg 	1.25 L				22	10									
+Meal Pack (Red Pellets)		Food restores nutrition and health	Food	1.5 kg 	1.25 L				23	10									
+Meal Pack (Chili)		Food restores nutrition and health	Food	1.5 kg 	1.25 L				30	10									
+Meal Pack (Ramen)		Food restores nutrition and health	Food	1.5 kg 	1.25 L				36	10									
+Meal Pack (Flatbread)		Food restores nutrition and health	Food	1.5 kg 	1.25 L				34	10									
+Meal Pack (Fruit Pastry)		Food restores nutrition and health	Food	1.5 kg 	1.25 L				40	10									
+Meal Pack (Veggie Burger)		Food restores nutrition and health	Food	1.5 kg 	1.25 L				46	10									
+Meal Pack (Green Pellets)		Food restores nutrition and health	Food	1.5 kg 	1.25 L				48	10									
+Meal Pack (Curry)		Food restores nutrition and health	Food	1.5 kg 	1.25 L				48	10									
+Meal Pack (Dumplings)		Food restores nutrition and health	Food	1.5 kg 	1.25 L				51	10									
+Meal Pack (Spaghetti)		Food restores nutrition and health	Food	1.5 kg 	1.25 L				71	10									
+Meal Pack (Lasagna)		Food restores nutrition and health	Food	1.5 kg 	1.25 L				75	10									
+Meal Pack (Burrito)		Food restores nutrition and health	Food	1.5 kg 	1.25 L				89	10									
+Meal Pack (Frontier Stew)		Food restores nutrition and health	Food	1.5 kg 	1.25 L				94	10									
+Meal Pack (Seared Sabiroid)		Food restores nutrition and health	Food	1.5 kg 	1.25 L				100	10									
+Meal Pack (Steak Dinner)		Food restores nutrition and health	Food	1.5 kg 	1.25 L				100	10									
+Fruit Seeds		Used to farm fruits	Seed	0.12 kg	0.10 L														
+Mushroom Spores		Used to farm mushrooms	Seed	0.12 kg	0.10 L														
+Vegetable Seeds		Used to farm vegetables	Seed	0.12 kg	0.10 L														
+Grain Seeds		Used to farm grains	Seed	0.12 kg	0.10 L														
