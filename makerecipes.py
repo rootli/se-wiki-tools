@@ -1,11 +1,31 @@
-import copy
-from time import localtime, strftime
+### Reads output of rocket-science.py: CSV file containing Space Engineers v205 game data.
+### Converts block recipe fields into mediawiki syntax and outputs them as text file.
+### By AdaRynin https://github.com/rootli
+
+### Place CSV file into same directory.
+### Example for output:
+'''
+{{Recipeinfo
+|product=Some Block Name
+|component1=Construction Comp.
+  |optional1=5
+  |required1=5
+  |smloptional1=5
+  |smlrequired1=5
+|component2=Interior Plate
+  |required2=10
+  |smlrequired2=10
+}}
+'''
+
+import copy # for complex dict
+from time import localtime, strftime # just for output file timestamp
 now = strftime("%Y%m%d-%H%M%S", localtime())
 
-wikirezeptepfad="SEFandomWikiRezepte"+now+".txt" # output
-spreadsheet_path="SE_Block_Info.csv" #input
-table_header=["blockname","type_id","subtype_id","grid_size","armor_type","mass","hitpoints",
-              "size_HWD","volume","build_time_secs","pcu_pc","pcu_console",
+wikirezeptepfad="SEWikiGGRezepte"+now+".txt" # output file
+spreadsheet_path="SE_Block_Info.csv" # input file
+table_header=["blockname","type_id","subtype_id","grid_size","armor_type","mass","blockCategory",
+              "hitpoints","size_HWD","volume","build_time_secs","pcu_pc","pcu_console",
               "airtightness","rangeMaxMeters","powerDrainBroadcastMaxkW",
               "powerInRequired","powerInIdle","powerOutMax","powerConsumeOperational",
               "powerConsumeStandby", "powerConsumeMax","powerConsumeMin",
@@ -26,49 +46,58 @@ table_header=["blockname","type_id","subtype_id","grid_size","armor_type","mass"
               "recipe_SmallTube_optional","recipe_Medical_optional",
               "recipe_SolarCell_optional","recipe_Superconductor_optional",
               "recipe_RadioCommunication_optional","recipe_ZoneChip_optional",
-              "recipe_PowerCell_optional","mountpoint_Front","mountpoint_Back","mountpoint_Left",
+              "recipe_PowerCell_optional","recipe_PrototechFrame","recipe_PrototechPanel",
+              "recipe_PrototechCapacitor","recipe_PrototechPropulsionUnit",
+              "recipe_PrototechMachinery","recipe_PrototechCircuitry","recipe_PrototechCoolingUnit",
+              "mountpoint_Front","mountpoint_Back","mountpoint_Left",
               "mountpoint_Right","mountpoint_Bottom","mountpoint_Top","DLC","Icon","standalone",
-              "ForceMagnitude","FlameDamageLengthScale","FlameDamage",
+              "ForceMagnitude","FlameDamageLengthScale","FlameDamage","DeformationRatio",
               "MinPlanetaryInfluence","MaxPlanetaryInfluence","EffectivenessAtMinInfluence",
               "EffectivenessAtMaxInfluence","description","hasPhysics"]
+
 debugmode=False
 def debugprint(s):
     if(debugmode):
         print(s)
 
-        
-content={}  # temp var in loop, needs copy()
-blockdict={} # result var
-firstRow=True # to skip table header
+content={}  # a temp var in loop, needs copy()!!
+blockdict={} # result dict to be generated, 
+firstRow=True # used to skip the table header
 
 def lookUpColumn(linesplit,columnName):
+    '''Linesplit ist "Komponentenname \t Large oder Small \t req oder opt"'''
     return linesplit[table_header.index(columnName)]
 
 def saveOneRow(uiname,dataname,linesplit,opt):
     '''
-    nimmt blockinfo, extrahiert zeile, speichert Wert im dict unter key
-    "Componentenname \t Large oder Small \ req oder opt"    
+    Fuegt dem lookup blockdict einen Eintrag hinzu.
+    Nimmt Blockinfo, extrahiert Zeile, speichert Wert im blockdict unter key
+    Linesplit ist "Komponentenname \t Large oder Small \t req oder opt"
     '''
     gridsize=lookUpColumn(linesplit,'grid_size')
     content[uiname+"\t"+gridsize+"\t"+opt] = lookUpColumn(linesplit,dataname)
 
-# This avoids duplicate lines for large and small grid in wiki recipe
+### In der Wikitabelle fuer das Rezept gibt es pro Komponente nur eine Zeile
+### mit Spalten fuer Large/Small, Opt/Req. Komponentenzeilen haben indices
+### in der Wikisyntax, die Spalten fuer Large/Small und Opt/Req brauchen bloss
+### den selben Index haben.
+### Der folgende Check verhindert im Output duplizierte Zeilen und appendet:
+
 CompLinesPrinted=[]
 
-ComponentIndex=1 # reset
+ComponentIndex=1 # wird auch in einer Schleife resettet
 
-def isCompLineAlreadyPrinted(c):
+def thisCompLineWasAlreadyPrinted(c):
     secondoccurrence=c in CompLinesPrinted
     if(secondoccurrence):
         global ComponentIndex
         ComponentIndex-=1
     return secondoccurrence
 
-def compLineAlreadyPrinted(c):
+def rememberThatThisCompLineWasAlreadyPrinted(c):
     CompLinesPrinted.append(c)
 
-def insertComponentIndex(i):
-    return ComponentIndex    
+### Relevante Daten in einem blockdict zum Nachschlagen sammeln
 
 print("Reading from "+spreadsheet_path)
 with open(spreadsheet_path,'r') as fin:
@@ -128,18 +157,28 @@ with open(spreadsheet_path,'r') as fin:
             saveOneRow('Superconductor','recipe_Superconductor_optional',linesplit,"optional")
             saveOneRow('Radio-comm Comp.','recipe_RadioCommunication_optional',linesplit,"optional")
             saveOneRow('Power Cell','recipe_PowerCell_optional',linesplit,"optional")
+
+            saveOneRow('Prototech Frame','recipe_PrototechFrame',linesplit,"required")
+            saveOneRow('Prototech Panel','recipe_PrototechPanel',linesplit,"required")
+            saveOneRow('Prototech Capacitor','recipe_PrototechCapacitor',linesplit,"required")
+            saveOneRow('Prototech Propulsion Unit','recipe_PrototechPropulsionUnit',linesplit,"required")
+            saveOneRow('Prototech Machinery','recipe_PrototechMachinery',linesplit,"required")
+            saveOneRow('Prototech Circuitry','recipe_PrototechCircuitry',linesplit,"required")
+            saveOneRow('Prototech Cooling Unit','recipe_PrototechCoolingUnit',linesplit,"required")
             
-            # Bei erster Groessenvariante gibt es den Blocknamen key noch nicht,
+            # Beim Antreffen der ersten Groessenvariante gibt es den Blocknamen key noch nicht im dict,
             # also einfach speichern. Zweite Groessenvariante dem ersten key anhaengen.
             if(blockname in blockdict):
-                blockdict[blockname].update(content.copy()) # second case: copy() and update key!
+                # second case, add to existing block: copy() and update key!
+                blockdict[blockname].update(content.copy()) 
             else:
-                blockdict[blockname]=content.copy() # first case: copy() and create key
-        firstRow=False #skipped table header 
+                # first case, new block: copy() and create key
+                blockdict[blockname]=content.copy() 
+        firstRow=False # we have skipped the table header 
 
 debugprint(blockdict)
 
-# Wiki syntax generieren.
+### Wir haben das dict. Jetzt Wiki syntax generieren.
 with open(wikirezeptepfad, "a") as wikirezepte:
     blockdict_sorted=dict(sorted(blockdict.items()))
     for blockname,entry in blockdict_sorted.items():
@@ -155,18 +194,21 @@ with open(wikirezeptepfad, "a") as wikirezepte:
             debugprint(count)
             comp,size,opt=component.split('\t')
             if(int(count) > 0):
-                # Duplikat dieser Zeile vermeiden
-                if(not isCompLineAlreadyPrinted(comp)):
-                    wikirezepte.write("|component"+str(insertComponentIndex(comp))+"="+comp+"\n")
-                    compLineAlreadyPrinted(comp)
+                # Duplikat dieser Zeile in der Tabelle vermeiden
+                if(not thisCompLineWasAlreadyPrinted(comp)):
+                    wikirezepte.write("|component"+str(ComponentIndex)+"="+comp+"\n")
+                    rememberThatThisCompLineWasAlreadyPrinted(comp) 
                 if(int(count) > 0 and size == 'Large' and opt == "required"):
-                    wikirezepte.write("  |required"+str(insertComponentIndex(comp))+"="+str(count)+"\n")
+                    wikirezepte.write("  |required"+str(ComponentIndex)+"="+str(count)+"\n")
                 elif(int(count) > 0 and size == 'Small' and opt == "required"):
-                    wikirezepte.write("  |smlrequired"+str(insertComponentIndex(comp))+"="+str(count)+"\n")
+                    wikirezepte.write("  |smlrequired"+str(ComponentIndex)+"="+str(count)+"\n")
                 elif(int(count) > 0 and size == 'Large' and opt == "optional"):
-                    wikirezepte.write("  |optional"+str(insertComponentIndex(comp))+"="+str(count)+"\n")
+                    wikirezepte.write("  |optional"+str(ComponentIndex)+"="+str(count)+"\n")
                 elif(int(count) > 0 and size == 'Small' and opt == "optional"):
-                    wikirezepte.write("  |smloptional"+str(insertComponentIndex(comp))+"="+str(count)+"\n")
+                    wikirezepte.write("  |smloptional"+str(ComponentIndex)+"="+str(count)+"\n")
                 ComponentIndex+=1 
         wikirezepte.write("}}\n\n")
 print("Done. Output in "+wikirezeptepfad)
+
+
+
